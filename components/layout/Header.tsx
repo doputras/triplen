@@ -32,6 +32,10 @@ export const Header: React.FC = () => {
   ];
 
   const isActive = (href: string) => {
+    // Exact match for homepage
+    if (href === '/') {
+      return pathname === href;
+    }
     if (href === '/shop') {
       return pathname === href;
     }
@@ -46,8 +50,7 @@ export const Header: React.FC = () => {
         }`} 
         role="banner"
       >
-        {/* Main Header */}
-        <div className="w-full px-6 md:px-8 lg:px-12">
+        <div className="mx-auto max-w-full px-6 md:px-8 lg:px-12">
           <div className="flex items-center justify-between h-20 md:h-24">
             {/* Mobile Menu Button */}
             <button
@@ -61,7 +64,7 @@ export const Header: React.FC = () => {
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0 md:ml-4" aria-label="3N Luxury Sleepwear - Home">
+            <Link href="/" className="flex-shrink-0" aria-label="3N Luxury Sleepwear - Home">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-navy tracking-tight">
                 3N
               </h1>
@@ -70,8 +73,11 @@ export const Header: React.FC = () => {
               </p>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex flex-1 justify-center items-center space-x-12 lg:space-x-20" role="navigation" aria-label="Main navigation">
+            {/* FIX #2: Changed 'space-x-12 lg:space-x-20' to 'gap-8 lg:gap-12'.
+              'gap-8' is a more modern utility that will apply the spacing.
+              This fixes the "squished text" problem.
+            */}
+            <nav className="hidden md:flex flex-1 justify-center items-center gap-8 lg:gap-12" role="navigation" aria-label="Main navigation">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -89,20 +95,20 @@ export const Header: React.FC = () => {
             </nav>
 
             {/* Icons */}
-            <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-7 flex-shrink-0 md:mr-4" role="navigation" aria-label="Utility navigation">
+            <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-7 flex-shrink-0 gap-4 lg:gap-8" role="navigation" aria-label="Utility navigation">
               <button
                 onClick={() => setSearchOpen(true)}
                 className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
                 aria-label="Search products"
               >
-                <FiSearch size={20} aria-hidden="true" />
+                <FiSearch size={25} aria-hidden="true" />
               </button>
               
               <button
                 className="hidden md:block p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
                 aria-label="View wishlist"
               >
-                <FiHeart size={20} aria-hidden="true" />
+                <FiHeart size={25} aria-hidden="true" />
               </button>
 
               <Link
@@ -110,7 +116,7 @@ export const Header: React.FC = () => {
                 className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
                 aria-label={user ? 'My account' : 'Sign in to your account'}
               >
-                <FiUser size={20} aria-hidden="true" />
+                <FiUser size={25} aria-hidden="true" />
               </Link>
 
               <button
@@ -118,7 +124,7 @@ export const Header: React.FC = () => {
                 className="relative p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
                 aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
               >
-                <FiShoppingBag size={20} aria-hidden="true" />
+                <FiShoppingBag size={25} aria-hidden="true" />
                 {cartCount > 0 && (
                   <span 
                     className="absolute -top-1 -right-1 bg-accent-gold text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium"
