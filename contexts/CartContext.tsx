@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { useAuth } from './AuthContext'
 import type { Product, ProductColor } from '@/types'
 
@@ -34,66 +34,73 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   // Load cart on mount and when user changes
   useEffect(() => {
     syncCart()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   // Sync cart with database or localStorage
-  const syncCart = async () => {
-  setLoading(true)
-  try {
-    if (user) {
-      // Fetch cart from database
-      const response = await fetch('/api/cart')
-      if (response.ok) {
+  const syncCart = useCallback(async () => {
+    setLoading(true)
+    try {
+      if (user) {
+        // Fetch cart from database
+        const response = await fetch('/api/cart')
+        if (!response.ok) {
+          throw new Error(`Failed to fetch cart: ${response.status}`)
+        }
+
         const data = await response.json()
         
-        // Add validation for data structure
+        // Validate data structure
         if (data && Array.isArray(data.items)) {
           const cartItems = data.items
-            .filter((item: any) => item && item.products) // Filter out invalid items
-            .map((item: any) => ({
-              id: item.id,
-              product: item.products,
-              selectedColor: item.products.colors?.find((c: any) => c.name === item.selected_color) || item.products.colors?.[0] || null,
-              selectedSize: item.selected_size,
-              quantity: item.quantity,
-            }))
-            .filter((item: CartItem) => item.selectedColor !== null) // Remove items without valid color
+            .filter((item: any) => item?.products) // Filter out invalid items
+            .map((item: any) => {
+              const selectedColor = item.products.colors?.find((c: any) => c.name === item.selected_color) || item.products.colors?.[0]
+              if (!selectedColor) {
+                console.warn('Invalid product color data for item:', item.id)
+                return null
+              }
+              return {
+                id: item.id,
+                product: item.products,
+                selectedColor,
+                selected_size: item.selected_size,
+                quantity: item.quantity,
+              }
+            })
+            .filter((item: CartItem | null): item is CartItem => item !== null) // Remove null items
           
           setCart(cartItems)
         } else {
-          console.warn('Invalid cart data structure:', data)
+          console.warn('Invalid cart data structure, resetting cart')
           setCart([])
         }
       } else {
-        console.error('Failed to fetch cart:', response.status)
-        setCart([])
-      }
-    } else {
-      // Load from localStorage for anonymous users
-      const localCart = localStorage.getItem('cart')
-      if (localCart) {
-        try {
-          const parsedCart = JSON.parse(localCart)
-          setCart(Array.isArray(parsedCart) ? parsedCart : [])
-        } catch (parseError) {
-          console.error('Error parsing localStorage cart:', parseError)
-          localStorage.removeItem('cart')
+        // Load from localStorage for anonymous users
+        const localCart = localStorage.getItem('cart')
+        if (localCart) {
+          try {
+            const parsedCart = JSON.parse(localCart)
+            setCart(Array.isArray(parsedCart) ? parsedCart : [])
+          } catch (parseError) {
+            console.error('Error parsing localStorage cart, clearing:', parseError)
+            localStorage.removeItem('cart')
+            setCart([])
+          }
+        } else {
           setCart([])
         }
-      } else {
-        setCart([])
       }
+    } catch (error) {
+      console.error('Error syncing cart:', error)
+      setCart([]) // Reset cart on error
+    } finally {
+      setLoading(false)
     }
-  } catch (error) {
-    console.error('Error syncing cart:', error)
-    setCart([]) // Reset cart on error
-  } finally {
-    setLoading(false)
-  }
-}
+  }, [user])
 
   // Add item to cart
-  const addToCart = async (product: Product, color: ProductColor, size: string, quantity: number) => {
+  const addToCart = useCallback(async (product: Product, color: ProductColor, size: string, quantity: number) => {
     if (user) {
       // Add to database
       try {
@@ -108,11 +115,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           }),
         })
 
-        if (response.ok) {
-          await syncCart()
+        if (!response.ok) {
+          throw new Error(`Failed to add to cart: ${response.status}`)
         }
+
+        await syncCart()
       } catch (error) {
         console.error('Error adding to cart:', error)
+        throw error // Propagate error for UI handling
       }
     } else {
       // Add to localStorage
@@ -146,10 +156,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(newCart)
       localStorage.setItem('cart', JSON.stringify(newCart))
     }
-  }
+  }, [user, cart, syncCart])
 
   // Remove item from cart
-  const removeFromCart = async (itemId: string) => {
+  const removeFromCart = useCallback(async (itemId: string) => {
     if (user) {
       // Remove from database
       try {
@@ -157,11 +167,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           method: 'DELETE',
         })
 
-        if (response.ok) {
-          await syncCart()
+        if (!response.ok) {
+          throw new Error(`Failed to remove from cart: ${response.status}`)
         }
+
+        await syncCart()
       } catch (error) {
         console.error('Error removing from cart:', error)
+        throw error
       }
     } else {
       // Remove from localStorage
@@ -169,10 +182,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(newCart)
       localStorage.setItem('cart', JSON.stringify(newCart))
     }
-  }
+  }, [user, cart, syncCart])
 
   // Update item quantity
-  const updateQuantity = async (itemId: string, quantity: number) => {
+  const updateQuantity = useCallback(async (itemId: string, quantity: number) => {
     if (quantity <= 0) {
       await removeFromCart(itemId)
       return
@@ -187,11 +200,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           body: JSON.stringify({ item_id: itemId, quantity }),
         })
 
-        if (response.ok) {
-          await syncCart()
+        if (!response.ok) {
+          throw new Error(`Failed to update quantity: ${response.status}`)
         }
+
+        await syncCart()
       } catch (error) {
         console.error('Error updating quantity:', error)
+        throw error
       }
     } else {
       // Update in localStorage
@@ -201,10 +217,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCart(newCart)
       localStorage.setItem('cart', JSON.stringify(newCart))
     }
-  }
+  }, [user, cart, syncCart, removeFromCart])
 
   // Clear cart
-  const clearCart = async () => {
+  const clearCart = useCallback(async () => {
     if (user) {
       // Clear database cart by removing all items
       try {
@@ -215,22 +231,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setCart([])
       } catch (error) {
         console.error('Error clearing cart:', error)
+        throw error
       }
     } else {
       setCart([])
       localStorage.removeItem('cart')
     }
-  }
+  }, [user, cart])
 
   // Calculate total
-  const getCartTotal = () => {
+  const getCartTotal = useCallback(() => {
     return cart.reduce((total, item) => total + item.product.price * item.quantity, 0)
-  }
+  }, [cart])
 
   // Get cart count
-  const getCartCount = () => {
+  const getCartCount = useCallback(() => {
     return cart.reduce((count, item) => count + item.quantity, 0)
-  }
+  }, [cart])
 
   const value = {
     cart,

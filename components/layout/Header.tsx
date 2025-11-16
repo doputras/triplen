@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FiShoppingBag, FiMenu, FiX, FiSearch, FiHeart, FiUser } from 'react-icons/fi';
@@ -25,13 +25,13 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
+  const navLinks = useMemo(() => [
     { href: '/', label: '3N' },
     { href: '/collection', label: 'Collection' },
     { href: '/contact', label: 'Contact' },
-  ];
+  ], []);
 
-  const isActive = (href: string) => {
+  const isActive = useCallback((href: string) => {
     // Exact match for homepage
     if (href === '/') {
       return pathname === href;
@@ -40,7 +40,27 @@ export const Header: React.FC = () => {
       return pathname === href;
     }
     return pathname?.startsWith(href);
-  };
+  }, [pathname]);
+
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen(!isMobileMenuOpen);
+  }, [isMobileMenuOpen, setMobileMenuOpen]);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, [setMobileMenuOpen]);
+
+  const openCart = useCallback(() => {
+    setCartOpen(true);
+  }, [setCartOpen]);
+
+  const openSearch = useCallback(() => {
+    setSearchOpen(true);
+  }, []);
+
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+  }, []);
 
   return (
     <>
@@ -54,30 +74,25 @@ export const Header: React.FC = () => {
           <div className="flex items-center justify-between h-20 md:h-24">
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={toggleMobileMenu}
               className="md:hidden p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
             >
-              {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+              {isMobileMenuOpen ? <FiX size={24} aria-hidden="true" /> : <FiMenu size={24} aria-hidden="true" />}
             </button>
 
             {/* Logo */}
+            <div className="w-1 sm:w-3 lg:w-5"></div> 
             <Link href="/" className="flex-shrink-0" aria-label="3N Luxury Sleepwear - Home">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-navy tracking-tight">
                 3N
               </h1>
-              <p className="text-xs text-gray-600 italic -mt-1 hidden md:block" aria-hidden="true">
-                Luxury made effortless
-              </p>
             </Link>
 
-            {/* FIX #2: Changed 'space-x-12 lg:space-x-20' to 'gap-8 lg:gap-12'.
-              'gap-8' is a more modern utility that will apply the spacing.
-              This fixes the "squished text" problem.
-            */}
-            <nav className="hidden md:flex flex-1 justify-center items-center gap-8 lg:gap-12" role="navigation" aria-label="Main navigation">
+            <nav className="hidden md:flex flex-1 justify-center items-center gap-5 lg:gap-8" role="navigation" aria-label="Main navigation">
+              <div className="w-4 sm:w-6 lg:w-8"></div> 
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -95,9 +110,9 @@ export const Header: React.FC = () => {
             </nav>
 
             {/* Icons */}
-            <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-7 flex-shrink-0 gap-4 lg:gap-8" role="navigation" aria-label="Utility navigation">
+            <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-7 flex-shrink-0 gap-2 lg:gap-6" role="navigation" aria-label="Utility navigation">
               <button
-                onClick={() => setSearchOpen(true)}
+                onClick={openSearch}
                 className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
                 aria-label="Search products"
               >
@@ -120,7 +135,7 @@ export const Header: React.FC = () => {
               </Link>
 
               <button
-                onClick={() => setCartOpen(true)}
+                onClick={openCart}
                 className="relative p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
                 aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
               >
@@ -134,6 +149,7 @@ export const Header: React.FC = () => {
                   </span>
                 )}
               </button>
+              <div className="w-1 sm:w-2 lg:w-3"></div> 
             </div>
           </div>
         </div>
@@ -149,7 +165,7 @@ export const Header: React.FC = () => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={closeMobileMenu}
                   className={`block py-3 px-4 text-sm uppercase tracking-wider transition-colors focus-visible-ring rounded-md ${
                     isActive(link.href)
                       ? 'text-accent-gold font-medium bg-accent-gold/5'
@@ -169,29 +185,33 @@ export const Header: React.FC = () => {
       {isSearchOpen && (
         <div 
           className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-fade-in"
-          onClick={() => setSearchOpen(false)}
+          onClick={closeSearch}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="search-title"
         >
           <div 
             className="bg-white w-full max-w-4xl mx-auto mt-20 p-8 md:p-12 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-8">
-              <h2 className="font-serif text-2xl md:text-3xl text-navy">Search Products</h2>
+              <h2 id="search-title" className="font-serif text-2xl md:text-3xl text-navy">Search Products</h2>
               <button
-                onClick={() => setSearchOpen(false)}
+                onClick={closeSearch}
                 className="p-2 text-navy hover:text-accent-gold transition-colors"
                 aria-label="Close search"
               >
-                <FiX size={24} />
+                <FiX size={24} aria-hidden="true" />
               </button>
             </div>
             <div className="relative">
-              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Search for products..."
                 className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 focus:border-accent-gold focus:outline-none transition-colors text-navy"
                 autoFocus
+                aria-label="Search for products"
               />
             </div>
             <p className="text-sm text-gray-500 mt-4">Try searching for "robes", "silk", or "nightgown"</p>

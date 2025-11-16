@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { Button } from '@/components/ui/Button';
 import { FiFilter, FiX, FiGrid, FiList } from 'react-icons/fi';
@@ -32,6 +32,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
+  // Memoized filter and sort logic
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = initialProducts;
 
@@ -70,18 +71,39 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
     return sorted;
   }, [initialProducts, selectedCategory, sortBy, priceRange, selectedSizes]);
 
-  const toggleSize = (size: string) => {
+  // Memoized callbacks to prevent unnecessary re-renders
+  const toggleSize = useCallback((size: string) => {
     setSelectedSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
-  };
+  }, []);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSelectedCategory('all');
     setPriceRange([0, 500]);
     setSelectedSizes([]);
     setSortBy('featured');
-  };
+  }, []);
+
+  const handlePriceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPriceRange([0, Number(e.target.value)]);
+  }, []);
+
+  const handleSortChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value as SortOption);
+  }, []);
+
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
+    setViewMode(mode);
+  }, []);
+
+  const toggleFilters = useCallback(() => {
+    setShowFilters((prev) => !prev);
+  }, []);
+
+  const closeFilters = useCallback(() => {
+    setShowFilters(false);
+  }, []);
 
   return (
     <div className="bg-ivory min-h-screen">
@@ -97,8 +119,8 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
           </p>
         </div>
       </div>
-
-      <div className="container mx-auto px-6 md:px-8 lg:px-12 py-12 md:py-16">
+      <div className="h-1 sm:h-2 lg:h-3"></div> 
+      <div className="max-w-full px-6 md:px-8 lg:px-12 py-12 md:py-16">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           {/* Sidebar Filters - Desktop */}
           <aside className="hidden lg:block lg:w-72 flex-shrink-0">
@@ -146,8 +168,9 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                     min="0"
                     max="500"
                     value={priceRange[1]}
-                    onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+                    onChange={handlePriceChange}
                     className="w-full accent-accent-gold"
+                    aria-label="Maximum price"
                   />
                   <div className="flex justify-between text-sm font-medium text-gray-700">
                     <span>${priceRange[0]}</span>
@@ -169,6 +192,8 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                           ? 'border-navy bg-navy text-white shadow-sm'
                           : 'border-gray-300 text-gray-700 hover:border-accent-gold hover:text-accent-gold'
                       }`}
+                      aria-label={`Filter by size ${size}`}
+                      aria-pressed={selectedSizes.includes(size)}
                     >
                       {size}
                     </button>
@@ -183,17 +208,20 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
             {/* Mobile Filters & Sort */}
             <div className="lg:hidden flex items-center justify-between mb-6 gap-4">
               <button
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={toggleFilters}
                 className="flex items-center gap-2 px-5 py-3 border-2 border-gray-300 rounded-md hover:border-navy transition-all font-medium"
+                aria-label="Toggle filters"
+                aria-expanded={showFilters}
               >
-                <FiFilter size={18} />
+                <FiFilter size={18} aria-hidden="true" />
                 <span>Filters</span>
               </button>
 
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                onChange={handleSortChange}
                 className="px-5 py-3 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-all"
+                aria-label="Sort products"
               >
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: Low to High</option>
@@ -204,42 +232,45 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
 
             {/* Desktop Sort & View Toggle */}
             <div className="hidden lg:flex items-center justify-between mb-10 bg-white p-4 rounded-lg shadow-sm">
+              <div className="h-7 sm:h-9 lg:h-10"></div>
               <p className="text-sm text-gray-600 font-medium">
                 Showing <span className="text-navy">{filteredAndSortedProducts.length}</span> of {initialProducts.length} products
               </p>
-              
               <div className="flex items-center gap-4">
                 {/* View Toggle */}
                 <div className="flex items-center gap-2 border-2 border-gray-300 rounded-md p-1">
                   <button
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => handleViewModeChange('grid')}
                     className={`p-2 rounded transition-all ${
                       viewMode === 'grid' 
                         ? 'bg-navy text-white' 
                         : 'text-gray-600 hover:text-navy'
                     }`}
                     aria-label="Grid view"
+                    aria-pressed={viewMode === 'grid'}
                   >
-                    <FiGrid size={18} />
+                    <FiGrid size={18} aria-hidden="true" />
                   </button>
                   <button
-                    onClick={() => setViewMode('list')}
+                    onClick={() => handleViewModeChange('list')}
                     className={`p-2 rounded transition-all ${
                       viewMode === 'list' 
                         ? 'bg-navy text-white' 
                         : 'text-gray-600 hover:text-navy'
                     }`}
                     aria-label="List view"
+                    aria-pressed={viewMode === 'list'}
                   >
-                    <FiList size={18} />
+                    <FiList size={18} aria-hidden="true" />
                   </button>
                 </div>
 
                 {/* Sort Dropdown */}
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  onChange={handleSortChange}
                   className="px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-gold focus:border-accent-gold transition-all"
+                  aria-label="Sort products"
                 >
                   <option value="featured">Featured</option>
                   <option value="price-low">Price: Low to High</option>
@@ -248,7 +279,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </select>
               </div>
             </div>
-
+            <div className="h-5 sm:h-6 lg:h-8"></div>            
             {/* Products Grid */}
             {filteredAndSortedProducts.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-lg shadow-sm">
@@ -277,6 +308,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </div>
             )}
           </div>
+          <div className="w-1 sm:w-2 lg:w-3"></div> 
         </div>
       </div>
 
@@ -285,18 +317,19 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setShowFilters(false)}
+            onClick={closeFilters}
+            role="presentation"
           />
           <div className="absolute inset-y-0 left-0 w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
             <div className="p-6 md:p-8 space-y-8">
               <div className="flex items-center justify-between border-b border-gray-200 pb-4">
                 <h2 className="font-serif text-2xl font-semibold text-navy">Filters</h2>
                 <button
-                  onClick={() => setShowFilters(false)}
+                  onClick={closeFilters}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   aria-label="Close filters"
                 >
-                  <FiX size={24} />
+                  <FiX size={24} aria-hidden="true" />
                 </button>
               </div>
 
@@ -331,8 +364,9 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                     min="0"
                     max="500"
                     value={priceRange[1]}
-                    onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+                    onChange={handlePriceChange}
                     className="w-full accent-accent-gold"
+                    aria-label="Maximum price"
                   />
                   <div className="flex justify-between text-sm font-medium text-gray-700">
                     <span>${priceRange[0]}</span>
@@ -354,6 +388,8 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                           ? 'border-navy bg-navy text-white shadow-sm'
                           : 'border-gray-300 text-gray-700 hover:border-accent-gold'
                       }`}
+                      aria-label={`Filter by size ${size}`}
+                      aria-pressed={selectedSizes.includes(size)}
                     >
                       {size}
                     </button>
@@ -366,7 +402,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 <Button onClick={clearFilters} fullWidth variant="outline" size="lg">
                   Clear All Filters
                 </Button>
-                <Button onClick={() => setShowFilters(false)} fullWidth size="lg">
+                <Button onClick={closeFilters} fullWidth size="lg">
                   View {filteredAndSortedProducts.length} Products
                 </Button>
               </div>

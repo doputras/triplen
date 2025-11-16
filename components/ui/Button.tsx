@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseStyles = 'font-medium transition-all duration-300 rounded-none uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none';
+  const baseStyles = 'font-medium transition-all duration-300 rounded-lg uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none';
   
   const variants = {
     primary: 'bg-navy text-white hover:bg-charcoal focus:ring-2 focus:ring-accent-gold focus:ring-offset-2',

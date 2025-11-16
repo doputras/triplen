@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,8 +14,26 @@ export const CartSidebar: React.FC = () => {
   const { cart, updateQuantity, removeFromCart, getCartTotal, loading } = useCart();
 
   const subtotal = getCartTotal();
-  const shipping = subtotal > 200 ? 0 : 15;
-  const total = subtotal + shipping;
+  const shipping = useMemo(() => (subtotal > 200 ? 0 : 15), [subtotal]);
+  const total = useMemo(() => subtotal + shipping, [subtotal, shipping]);
+  const itemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
+  const freeShippingRemaining = useMemo(() => Math.max(0, 200 - subtotal), [subtotal]);
+
+  const closeCart = useCallback(() => {
+    setCartOpen(false);
+  }, [setCartOpen]);
+
+  const handleRemoveItem = useCallback((itemId: string) => {
+    removeFromCart(itemId);
+  }, [removeFromCart]);
+
+  const handleDecreaseQuantity = useCallback((itemId: string, currentQuantity: number) => {
+    updateQuantity(itemId, currentQuantity - 1);
+  }, [updateQuantity]);
+
+  const handleIncreaseQuantity = useCallback((itemId: string, currentQuantity: number) => {
+    updateQuantity(itemId, currentQuantity + 1);
+  }, [updateQuantity]);
 
   if (!isCartOpen) return null;
 
@@ -30,7 +48,8 @@ export const CartSidebar: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-black bg-opacity-50 z-50"
-            onClick={() => setCartOpen(false)}
+            onClick={closeCart}
+            role="presentation"
           />
 
           {/* Sidebar */}
@@ -40,16 +59,19 @@ export const CartSidebar: React.FC = () => {
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
             className="fixed right-0 top-0 h-full w-full md:w-[480px] bg-white z-50 shadow-2xl flex flex-col"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cart-title"
           >
         {/* Header */}
         <div className="flex items-center justify-between p-8 border-b border-gray-200">
-          <h2 className="font-serif text-2xl md:text-3xl font-semibold text-navy">Shopping Cart</h2>
+          <h2 id="cart-title" className="font-serif text-2xl md:text-3xl font-semibold text-navy">Shopping Cart</h2>
           <button
-            onClick={() => setCartOpen(false)}
+            onClick={closeCart}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             aria-label="Close cart"
           >
-            <FiX size={24} />
+            <FiX size={24} aria-hidden="true" />
           </button>
         </div>
 
@@ -61,9 +83,9 @@ export const CartSidebar: React.FC = () => {
             </div>
           ) : cart.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-              <FiShoppingBag size={64} className="text-gray-300" />
+              <FiShoppingBag size={64} className="text-gray-300" aria-hidden="true" />
               <p className="text-gray-500 text-lg">Your cart is empty</p>
-              <Button onClick={() => setCartOpen(false)}>
+              <Button onClick={closeCart}>
                 <Link href="/shop">Continue Shopping</Link>
               </Button>
             </div>
@@ -110,31 +132,32 @@ export const CartSidebar: React.FC = () => {
                         </p>
                       </div>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => handleRemoveItem(item.id)}
                         className="text-gray-400 hover:text-red-500 transition-colors"
-                        aria-label="Remove item"
+                        aria-label={`Remove ${item.product.name} from cart`}
                       >
-                        <FiX size={18} />
+                        <FiX size={18} aria-hidden="true" />
                       </button>
                     </div>
 
                     <div className="mt-auto flex items-center justify-between">
                       {/* Quantity Controls */}
-                      <div className="flex items-center border border-gray-300">
+                      <div className="flex items-center border border-gray-300" role="group" aria-label="Quantity controls">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => handleDecreaseQuantity(item.id, item.quantity)}
                           className="p-2 hover:bg-gray-100 transition-colors"
                           aria-label="Decrease quantity"
+                          disabled={item.quantity <= 1}
                         >
-                          <FiMinus size={14} />
+                          <FiMinus size={14} aria-hidden="true" />
                         </button>
-                        <span className="px-4 text-sm font-medium">{item.quantity}</span>
+                        <span className="px-4 text-sm font-medium" aria-label={`Quantity: ${item.quantity}`}>{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => handleIncreaseQuantity(item.id, item.quantity)}
                           className="p-2 hover:bg-gray-100 transition-colors"
                           aria-label="Increase quantity"
                         >
-                          <FiPlus size={14} />
+                          <FiPlus size={14} aria-hidden="true" />
                         </button>
                       </div>
 
@@ -156,7 +179,7 @@ export const CartSidebar: React.FC = () => {
             {/* Totals */}
             <div className="space-y-3">
               <div className="flex justify-between text-base">
-                <span className="text-gray-600">Subtotal ({cart.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+                <span className="text-gray-600">Subtotal ({itemCount} items)</span>
                 <span className="font-medium">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-base">
@@ -165,9 +188,9 @@ export const CartSidebar: React.FC = () => {
                   {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
                 </span>
               </div>
-              {subtotal < 200 && (
+              {freeShippingRemaining > 0 && (
                 <p className="text-sm text-accent-gold bg-warm-white px-4 py-2 rounded">
-                  Add ${(200 - subtotal).toFixed(2)} more for free shipping!
+                  Add ${freeShippingRemaining.toFixed(2)} more for free shipping!
                 </p>
               )}
               <div className="flex justify-between text-xl font-semibold pt-4 border-t border-gray-200">
@@ -177,7 +200,7 @@ export const CartSidebar: React.FC = () => {
             </div>
 
             {/* Checkout Button */}
-            <Link href="/checkout" onClick={() => setCartOpen(false)}>
+            <Link href="/checkout" onClick={closeCart}>
               <Button fullWidth size="lg">
                 Proceed to Checkout
               </Button>
@@ -185,7 +208,7 @@ export const CartSidebar: React.FC = () => {
 
             <Link
               href="/cart"
-              onClick={() => setCartOpen(false)}
+              onClick={closeCart}
               className="block text-center text-base text-navy hover:text-accent-gold transition-colors"
             >
               View Full Cart
