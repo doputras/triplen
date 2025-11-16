@@ -1,0 +1,6 @@
+<svg width="800" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="1200" fill="#fafaf9"/>
+  <rect x="100" y="200" width="600" height="800" fill="#d6cfc4" opacity="0.3"/>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Georgia, serif" font-size="48" fill="#1e293b">Silk Kimono Robe</text>
+  <text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#666">Ivory</text>
+</svg>
