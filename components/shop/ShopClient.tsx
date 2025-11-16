@@ -32,26 +32,21 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
 
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-  // Memoized filter and sort logic
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = initialProducts;
 
-    // Category filter
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((p) => p.category === selectedCategory);
     }
 
-    // Price filter
     filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
-    // Size filter
     if (selectedSizes.length > 0) {
       filtered = filtered.filter((p) =>
         p.sizes.some((s: any) => selectedSizes.includes(s.size))
       );
     }
 
-    // Sort
     const sorted = [...filtered];
     switch (sortBy) {
       case 'price-low':
@@ -71,7 +66,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
     return sorted;
   }, [initialProducts, selectedCategory, sortBy, priceRange, selectedSizes]);
 
-  // Memoized callbacks to prevent unnecessary re-renders
   const toggleSize = useCallback((size: string) => {
     setSelectedSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
@@ -107,9 +101,8 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
 
   return (
     <div className="bg-ivory min-h-screen">
-      {/* Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-6 md:px-8 lg:px-12 py-16 md:py-20">
+        <div className="container mx-auto py-16 md:py-20">
           <h1 className="font-serif text-4xl md:text-6xl font-semibold text-navy mb-6">
             {categories.find((c) => c.value === selectedCategory)?.label || 'Shop'}
           </h1>
@@ -119,10 +112,10 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
           </p>
         </div>
       </div>
-      <div className="h-1 sm:h-2 lg:h-3"></div> 
-      <div className="max-w-full px-6 md:px-8 lg:px-12 py-12 md:py-16">
+      
+      {/* THIS IS THE FIXED LINE */}
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 py-6 md:py-8">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          {/* Sidebar Filters - Desktop */}
           <aside className="hidden lg:block lg:w-72 flex-shrink-0">
             <div className="sticky top-28 space-y-8 bg-white p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-between border-b border-gray-200 pb-4">
@@ -139,7 +132,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 )}
               </div>
 
-              {/* Categories */}
               <div>
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Categories</h3>
                 <div className="space-y-2">
@@ -159,7 +151,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </div>
               </div>
 
-              {/* Price Range */}
               <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Price Range</h3>
                 <div className="space-y-4">
@@ -179,7 +170,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </div>
               </div>
 
-              {/* Sizes */}
               <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Sizes</h3>
                 <div className="grid grid-cols-3 gap-2">
@@ -203,9 +193,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
             </div>
           </aside>
 
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Mobile Filters & Sort */}
             <div className="lg:hidden flex items-center justify-between mb-6 gap-4">
               <button
                 onClick={toggleFilters}
@@ -230,14 +218,11 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </select>
             </div>
 
-            {/* Desktop Sort & View Toggle */}
             <div className="hidden lg:flex items-center justify-between mb-10 bg-white p-4 rounded-lg shadow-sm">
-              <div className="h-7 sm:h-9 lg:h-10"></div>
               <p className="text-sm text-gray-600 font-medium">
                 Showing <span className="text-navy">{filteredAndSortedProducts.length}</span> of {initialProducts.length} products
               </p>
               <div className="flex items-center gap-4">
-                {/* View Toggle */}
                 <div className="flex items-center gap-2 border-2 border-gray-300 rounded-md p-1">
                   <button
                     onClick={() => handleViewModeChange('grid')}
@@ -265,7 +250,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                   </button>
                 </div>
 
-                {/* Sort Dropdown */}
                 <select
                   value={sortBy}
                   onChange={handleSortChange}
@@ -279,10 +263,8 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </select>
               </div>
             </div>
-            <div className="h-5 sm:h-6 lg:h-8"></div>            
-            {/* Products Grid */}
             {filteredAndSortedProducts.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-lg shadow-sm">
+              <div className="text-center py-20 bg-white rounded-lg shadow-sm mt-5 sm:mt-6 lg:mt-8">
                 <div className="max-w-md mx-auto space-y-6">
                   <div className="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
                     <FiFilter size={32} className="text-gray-400" />
@@ -308,11 +290,9 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </div>
             )}
           </div>
-          <div className="w-1 sm:w-2 lg:w-3"></div> 
         </div>
       </div>
 
-      {/* Mobile Filters Modal */}
       {showFilters && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
@@ -333,7 +313,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </button>
               </div>
 
-              {/* Categories */}
               <div>
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Categories</h3>
                 <div className="space-y-2">
@@ -355,7 +334,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </div>
               </div>
 
-              {/* Price Range */}
               <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Price Range</h3>
                 <div className="space-y-4">
@@ -375,7 +353,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </div>
               </div>
 
-              {/* Sizes */}
               <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Sizes</h3>
                 <div className="grid grid-cols-3 gap-2">
@@ -397,7 +374,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
                 </div>
               </div>
 
-              {/* Buttons */}
               <div className="space-y-3 pt-6">
                 <Button onClick={clearFilters} fullWidth variant="outline" size="lg">
                   Clear All Filters

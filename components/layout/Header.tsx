@@ -26,13 +26,12 @@ export const Header: React.FC = () => {
   }, []);
 
   const navLinks = useMemo(() => [
-    { href: '/', label: '3N' },
+    { href: '/', label: 'Home' },
     { href: '/collection', label: 'Collection' },
     { href: '/contact', label: 'Contact' },
   ], []);
 
   const isActive = useCallback((href: string) => {
-    // Exact match for homepage
     if (href === '/') {
       return pathname === href;
     }
@@ -64,15 +63,14 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header 
+      <header
         className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ${
           scrolled ? 'shadow-md' : 'border-b border-gray-200'
-        }`} 
+        }`}
         role="banner"
       >
-        <div className="mx-auto max-w-full px-6 md:px-8 lg:px-12">
-          <div className="flex items-center justify-between h-20 md:h-24">
-            {/* Mobile Menu Button */}
+        <div className="mx-auto max-w-full px-6 md:px-8 lg:px-12 grid grid-cols-3 items-center h-20 md:h-24">
+          <div className="flex items-center justify-start">
             <button
               onClick={toggleMobileMenu}
               className="md:hidden p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
@@ -83,80 +81,80 @@ export const Header: React.FC = () => {
               {isMobileMenuOpen ? <FiX size={24} aria-hidden="true" /> : <FiMenu size={24} aria-hidden="true" />}
             </button>
 
-            {/* Logo */}
-            <div className="w-1 sm:w-3 lg:w-5"></div> 
-            <Link href="/" className="flex-shrink-0" aria-label="3N Luxury Sleepwear - Home">
+            <Link href="/" className="hidden md:block flex-shrink-0" aria-label="3N Luxury Sleepwear - Home">
               <h1 className="font-serif text-3xl md:text-4xl font-bold text-navy tracking-tight">
                 3N
               </h1>
             </Link>
+          </div>
 
-            <nav className="hidden md:flex flex-1 justify-center items-center gap-5 lg:gap-8" role="navigation" aria-label="Main navigation">
-              <div className="w-4 sm:w-6 lg:w-8"></div> 
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-sm uppercase tracking-wider transition-colors focus-visible-ring rounded-md px-4 py-2 ${
-                    isActive(link.href)
-                      ? 'text-accent-gold font-medium'
-                      : 'text-navy hover:text-accent-gold'
-                  }`}
-                  aria-current={isActive(link.href) ? 'page' : undefined}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Icons */}
-            <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-7 flex-shrink-0 gap-2 lg:gap-6" role="navigation" aria-label="Utility navigation">
-              <button
-                onClick={openSearch}
-                className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
-                aria-label="Search products"
-              >
-                <FiSearch size={25} aria-hidden="true" />
-              </button>
-              
-              <button
-                className="hidden md:block p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
-                aria-label="View wishlist"
-              >
-                <FiHeart size={25} aria-hidden="true" />
-              </button>
-
+          <nav className="hidden md:flex justify-center items-center gap-5 lg:gap-8" role="navigation" aria-label="Main navigation">
+            {navLinks.map((link) => (
               <Link
-                href={user ? '/account' : '/login'}
-                className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
-                aria-label={user ? 'My account' : 'Sign in to your account'}
+                key={link.href}
+                href={link.href}
+                className={`text-sm uppercase tracking-wider transition-colors focus-visible-ring rounded-md px-4 py-2 ${
+                  isActive(link.href)
+                    ? 'text-accent-gold font-medium'
+                    : 'text-navy hover:text-accent-gold'
+                }`}
+                aria-current={isActive(link.href) ? 'page' : undefined}
               >
-                <FiUser size={25} aria-hidden="true" />
+                {link.label}
               </Link>
+            ))}
+          </nav>
 
-              <button
-                onClick={openCart}
-                className="relative p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
-                aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
-              >
-                <FiShoppingBag size={25} aria-hidden="true" />
-                {cartCount > 0 && (
-                  <span 
-                    className="absolute -top-1 -right-1 bg-accent-gold text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium"
-                    aria-hidden="true"
-                  >
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              <div className="w-1 sm:w-2 lg:w-3"></div> 
-            </div>
+          <Link href="/" className="md:hidden flex justify-center flex-shrink-0" aria-label="3N Luxury Sleepwear - Home">
+            <h1 className="font-serif text-3xl font-bold text-navy tracking-tight">
+              3N
+            </h1>
+          </Link>
+
+          <div className="flex items-center justify-end space-x-4 md:space-x-6 lg:space-x-7" role="navigation" aria-label="Utility navigation">
+            <button
+              onClick={openSearch}
+              className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
+              aria-label="Search products"
+            >
+              <FiSearch size={25} aria-hidden="true" />
+            </button>
+            
+            <button
+              className="hidden md:block p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
+              aria-label="View wishlist"
+            >
+              <FiHeart size={25} aria-hidden="true" />
+            </button>
+
+            <Link
+              href={user ? '/account' : '/login'}
+              className="p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
+              aria-label={user ? 'My account' : 'Sign in to your account'}
+            >
+              <FiUser size={25} aria-hidden="true" />
+            </Link>
+
+            <button
+              onClick={openCart}
+              className="relative p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
+              aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
+            >
+              <FiShoppingBag size={25} aria-hidden="true" />
+              {cartCount > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 bg-accent-gold text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium"
+                  aria-hidden="true"
+                >
+                  {cartCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div 
+          <div
             id="mobile-navigation"
             className="md:hidden border-t border-gray-200 bg-white"
           >
@@ -181,16 +179,15 @@ export const Header: React.FC = () => {
         )}
       </header>
 
-      {/* Search Overlay */}
       {isSearchOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-fade-in"
           onClick={closeSearch}
           role="dialog"
           aria-modal="true"
           aria-labelledby="search-title"
         >
-          <div 
+          <div
             className="bg-white w-full max-w-4xl mx-auto mt-20 p-8 md:p-12 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >

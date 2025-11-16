@@ -29,9 +29,7 @@ export default function AccountPage() {
   }, [user, loading, router])
 
   useEffect(() => {
-    if (user) {
-      loadOrders()
-    }
+    if (user) loadOrders()
   }, [user])
 
   const loadOrders = async () => {
@@ -87,25 +85,18 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-24">
-      <div className="max-w-4xl mx-auto">
-        {/* Profile Header */}
-        <div className="mb-12">
-          <h1 className="font-playfair text-4xl md:text-5xl text-navy mb-4">
-            My Account
-          </h1>
-          <p className="text-gray-600">
-            Manage your profile and view your order history
-          </p>
+    <div className="w-full px-6 md:px-8 lg:px-12 py-24">
+      <div className="max-w-4xl mx-auto space-y-12">
+        
+        <div>
+          <h1 className="font-playfair text-4xl md:text-5xl text-navy mb-4">My Account</h1>
+          <p className="text-gray-600">Manage your profile and view your order history</p>
         </div>
 
-        {/* Profile Info */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-8">
+        <div className="bg-white border border-gray-200 rounded-lg p-8">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-playfair text-navy mb-2">
-                Profile Information
-              </h2>
+              <h2 className="text-2xl font-playfair text-navy mb-2">Profile Information</h2>
               <p className="text-gray-600">Your account details</p>
             </div>
             <Button variant="secondary" onClick={() => router.push('/account/edit')}>
@@ -115,25 +106,19 @@ export default function AccountPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                Full Name
-              </label>
+              <label className="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
               <p className="text-gray-900">
                 {user.user_metadata?.full_name || 'Not provided'}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                Email Address
-              </label>
+              <label className="block text-sm font-medium text-gray-500 mb-1">Email Address</label>
               <p className="text-gray-900">{user.email}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
-                Member Since
-              </label>
+              <label className="block text-sm font-medium text-gray-500 mb-1">Member Since</label>
               <p className="text-gray-900">
                 {formatDate(user.created_at)}
               </p>
@@ -141,22 +126,15 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {/* Order History */}
         <div className="bg-white border border-gray-200 rounded-lg p-8">
-          <h2 className="text-2xl font-playfair text-navy mb-6">
-            Order History
-          </h2>
+          <h2 className="text-2xl font-playfair text-navy mb-6">Order History</h2>
 
           {loadingOrders ? (
-            <div className="text-center py-12 text-gray-600">
-              Loading orders...
-            </div>
+            <div className="text-center py-12 text-gray-600">Loading orders...</div>
           ) : orders.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 mb-4">You haven&apos;t placed any orders yet</p>
-              <Button onClick={() => router.push('/shop')}>
-                Start Shopping
-              </Button>
+              <Button onClick={() => router.push('/shop')}>Start Shopping</Button>
             </div>
           ) : (
             <div className="space-y-4">
@@ -175,6 +153,7 @@ export default function AccountPage() {
                         {formatDate(order.created_at)}
                       </p>
                     </div>
+
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}
                     >
@@ -196,11 +175,8 @@ export default function AccountPage() {
           )}
         </div>
 
-        {/* Sign Out */}
-        <div className="mt-8 text-center">
-          <Button variant="secondary" onClick={signOut}>
-            Sign Out
-          </Button>
+        <div className="text-center">
+          <Button variant="secondary" onClick={signOut}>Sign Out</Button>
         </div>
       </div>
     </div>

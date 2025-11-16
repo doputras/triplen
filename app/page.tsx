@@ -23,20 +23,20 @@ export default async function Home() {
         </video>
 
         <div className="relative z-10 text-center text-white px-4 sm:px-6 md:px-8 lg:px-12 max-w-7xl mx-auto">
-          <div className="mb-12 sm:mb-16 md:mb-20 animate-fade-in">
+          <div className="mb-12 sm:mb-16 md:mb-20 animate-fade-in space-y-2 sm:space-y-4 lg:space-y-6">
             <h1 className="font-serif text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none">
               3N
             </h1>
-            <div className="h-2 sm:h-4 lg:h-6"></div>
-            <div className="h-px w-24 sm:w-32 md:w-40 bg-accent-gold mx-auto mb-8 md:mb-10"></div>
+            <div className="h-px w-24 sm:w-32 md:w-40 bg-accent-gold mx-auto"></div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-[0.2em] sm:tracking-[0.3em] uppercase font-light">
               The Art of Sleep
             </p>
           </div>
-          <p className="text-base md:text-lg lg:text-xl max-w-2xl lg:max-w-3xl mx-auto leading-relaxed mb-16 md:mb-20 font-light">
+          
+          <p className="text-base md:text-lg lg:text-xl max-w-2xl lg:max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 lg:mb-10 font-light">
             Crafted from the world's finest materials, each piece embodies timeless elegance and unparalleled comfort.
           </p>
-          <div className="h-2 sm:h-4 lg:h-6"></div>
+          
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center">
             <Link href="/collection">
               <Button 
@@ -47,7 +47,6 @@ export default async function Home() {
             </Link>
           </div>
         </div>
-        {/* END OF FIXES */}
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white animate-bounce">
@@ -57,80 +56,55 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Spacer */}
-      <div className="h-12 sm:h-16 lg:h-20"></div>
-
       {/* Trust Badges Section */}
-      <section className="pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24 bg-white border-b border-gray-200">
+      <section className="pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-20 lg:pb-24 bg-white border-b border-gray-200">
         <div className="mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-12">
-          {/* Spacer */}
-          <div className="h-6 sm:h-8"></div>
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
-            <div className="text-center space-y-4">
-              <div className="flex justify-center mb-5">
-                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy">
-                  <FiTruck size={28} />
-                </div>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy mb-5">
+                <FiTruck size={28} />
               </div>
-              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy">Free Shipping</h3>
-              <div className="h-2"></div>
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy mb-2">Free Shipping</h3>
               <p className="text-sm text-gray-600 leading-relaxed px-2">On all orders over $200</p>
             </div>
-            <div className="text-center space-y-4">
-              <div className="flex justify-center mb-5">
-                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy">
-                  <FiRefreshCw size={28} />
-                </div>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy mb-5">
+                <FiRefreshCw size={28} />
               </div>
-              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy">Easy Returns</h3>
-              <div className="h-2"></div>
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy mb-2">Easy Returns</h3>
               <p className="text-sm text-gray-600 leading-relaxed px-2">30-day return policy</p>
             </div>
-            <div className="text-center space-y-4">
-              <div className="flex justify-center mb-5">
-                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy">
-                  <FiShield size={28} />
-                </div>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy mb-5">
+                <FiShield size={28} />
               </div>
-              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy">Secure Payment</h3>
-              <div className="h-2"></div>
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy mb-2">Secure Payment</h3>
               <p className="text-sm text-gray-600 leading-relaxed px-2">100% secure checkout</p>
             </div>
-            <div className="text-center space-y-4">
-              <div className="flex justify-center mb-5">
-                <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy">
-                  <FiAward size={28} />
-                </div>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-navy/5 text-navy mb-5">
+                <FiAward size={28} />
               </div>
-              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy">Premium Quality</h3>
-              <div className="h-2"></div>
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-navy mb-2">Premium Quality</h3>
               <p className="text-sm text-gray-600 leading-relaxed px-2">Finest materials crafted</p>
             </div>
           </div>
-          
-          {/* Spacer */}
-          <div className="h-6 sm:h-8"></div>
         </div>
       </section>
 
-      {/* Spacer */}
-      <div className="h-12 sm:h-16 lg:h-20"></div>
-
       {/* Products Carousel Section */}
-      <section className="py-20 sm:py-24 lg:py-32 bg-ivory">
+      <section className="py-32 sm:py-40 lg:py-52 bg-ivory">
         <div className="mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-12">
-          <div className="text-center mb-16 sm:mb-20">
-            <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-navy mb-6 sm:mb-8 tracking-tight">
+          <div className="text-center mb-16 sm:mb-20 space-y-2 sm:space-y-4 lg:space-y-6">
+            <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-navy tracking-tight">
               Essential Companions
             </h2>
-            <div className="h-2 sm:h-4 lg:h-6"></div>
-            <div className="h-px w-24 sm:w-32 bg-accent-gold mx-auto mb-8 sm:mb-10"></div>
+            <div className="h-px w-24 sm:w-32 bg-accent-gold mx-auto"></div>
             <p className="text-gray-600 text-base sm:text-lg md:text-xl mx-auto leading-relaxed px-4 max-w-full">
               Discover our curated selection of luxury sleepwear, each piece designed to elevate your evening ritual into an art form.
             </p>
           </div>
-          <div className="h-2 sm:h-4 lg:h-6"></div>
+          
           {/* Horizontal Scrolling Products */}
           <div className="relative">
             <div className="overflow-x-auto scrollbar-hide pb-8 sm:pb-10">
@@ -143,10 +117,8 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="h-6 sm:h-8 lg:h-10"></div>
-
             {/* View All Link */}
-            <div className="text-center mt-16 sm:mt-20">
+            <div className="text-center mt-20 sm:mt-28 lg:mt-32">
               <Link 
                 href="/collection" 
                 className="inline-flex items-center gap-2 sm:gap-3 text-navy hover:text-accent-gold transition-colors text-base sm:text-lg md:text-xl font-medium group"
@@ -159,11 +131,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Spacer */}
-      <div className="h-12 sm:h-16 lg:h-20"></div>
-
-      {/* About Section - NEW */}
-      <section className="py-20 sm:py-24 lg:py-32 bg-white">
+      {/* About Section */}
+      <section className="py-32 sm:py-40 lg:py-52 bg-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 xl:gap-24 items-center">
             <div className="order-2 lg:order-1">
@@ -177,15 +146,13 @@ export default async function Home() {
                 />
               </div>
             </div>
-            <div className="order-1 lg:order-2 space-y-8 sm:space-y-10 text-center lg:text-left">
-              <div>
-                <p className="text-accent-gold text-sm sm:text-base uppercase tracking-widest mb-4 sm:mb-5">Our Story</p>
-                <div className="h-2"></div>
-                <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl text-navy mb-6 sm:mb-8 leading-tight">
-                  Where Luxury Meets Comfort
-                </h2>
-                <div className="h-px w-20 sm:w-24 bg-accent-gold mb-8 sm:mb-10 mx-auto lg:mx-0"></div>
-              </div>
+            <div className="order-1 lg:order-2 text-center lg:text-left">
+              <p className="text-accent-gold text-sm sm:text-base uppercase tracking-widest mb-2">Our Story</p>
+              <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl text-navy mb-4 sm:mb-5 leading-tight">
+                Where Luxury Meets Comfort
+              </h2>
+              <div className="h-px w-20 sm:w-24 bg-accent-gold mb-8 sm:mb-10 mx-auto lg:mx-0"></div>
+              
               <div className="space-y-6 sm:space-y-8 text-gray-700 leading-relaxed text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
                 <p>
                   At 3N, we believe that the art of rest begins with what you wear. Our collections 
@@ -201,8 +168,9 @@ export default async function Home() {
                   are for you.
                 </p>
               </div>
-              <Link href="/contact">
-                <Button variant="outline" size="lg" className="mt-8 sm:mt-10">
+              
+              <Link href="/contact" className="inline-block mt-10 sm:mt-12">
+                <Button variant="outline" size="lg">
                   Learn More About Us
                 </Button>
               </Link>

@@ -25,8 +25,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-navy text-white">
-      <div className="h-1 sm:h-3 lg:h-5"></div> 
+    <footer className="bg-navy text-white pt-1 sm:pt-3 lg:pt-5">
       <div className="mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20">
         {/* Brand and Newsletter Section */}
         <div className="max-w-full mx-auto text-center space-y-8 sm:space-y-10 mb-12 sm:mb-16">
@@ -41,8 +40,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         <div className="flex justify-center py-10 sm:py-12 border-t border-gray-700">
-          <div className="space-y-4 text-center">
-            <div className="h-1 sm:h-3 lg:h-5"></div> 
+          <div className="space-y-5 sm:space-y-7 lg:space-y-9 text-center">
             <div className="flex gap-3 sm:gap-4 justify-center">
               <a
                 href="https://instagram.com"
@@ -72,7 +70,6 @@ export const Footer: React.FC = () => {
                 <FiTwitter size={20} />
               </a>
             </div>
-            <div className="h-1 sm:h-3 lg:h-5"></div> 
           </div>
           
         </div>
