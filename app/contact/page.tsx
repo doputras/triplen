@@ -42,20 +42,20 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Content */}
-      <section className="py-24">
+      <section className="py-16 lg:py-20">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Information */}
             <div>
-              <h2 className="font-serif text-4xl text-navy mb-8">
+              <h2 className="font-serif text-3xl text-navy mb-6">
                 We'd Love to Hear From You
               </h2>
-              <p className="text-gray-700 text-lg leading-relaxed mb-12">
+              <p className="text-gray-700 text-lg leading-relaxed mb-8">
                 Whether you have a question about our products, need styling advice, or want to
                 learn more about 3N, our team is ready to answer all your questions.
               </p>
 
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {/* Email */}
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-navy rounded-full flex items-center justify-center flex-shrink-0">
@@ -107,9 +107,9 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-white p-8 md:p-12 shadow-sm">
-              <h3 className="font-serif text-3xl text-navy mb-6">Send Us a Message</h3>
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="bg-white p-6 md:p-8 shadow-sm">
+              <h3 className="font-serif text-2xl text-navy mb-5">Send Us a Message</h3>
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Your Name *
@@ -173,10 +173,10 @@ export default function ContactPage() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-16 bg-ivory">
+      <section className="py-12 bg-ivory">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 text-center">
-          <h3 className="font-serif text-3xl text-navy mb-4">Stay Connected</h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          <h3 className="font-serif text-2xl text-navy mb-3">Stay Connected</h3>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Subscribe to our newsletter for exclusive offers and updates
           </p>
           <form className="max-w-md mx-auto flex gap-4">

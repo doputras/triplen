@@ -11,39 +11,25 @@ type ViewMode = 'grid' | 'list';
 
 interface ShopClientProps {
   initialProducts: Product[];
-  initialCategory: string;
 }
 
-export function ShopClient({ initialProducts, initialCategory }: ShopClientProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
+export function ShopClient({ initialProducts }: ShopClientProps) {
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
-  const categories = [
-    { value: 'all', label: 'All Products' },
-    { value: 'robes', label: 'Robes' },
-    { value: 'pajamas', label: 'Pajamas' },
-    { value: 'nightgowns', label: 'Nightgowns' },
-    { value: 'accessories', label: 'Accessories' },
-  ];
-
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = initialProducts;
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter((p) => p.category === selectedCategory);
-    }
-
     filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
     if (selectedSizes.length > 0) {
       filtered = filtered.filter((p) =>
-        p.sizes.some((s: any) => selectedSizes.includes(s.size))
+        p.sizes.some((s) => selectedSizes.includes(s.size))
       );
     }
 
@@ -64,7 +50,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
     }
 
     return sorted;
-  }, [initialProducts, selectedCategory, sortBy, priceRange, selectedSizes]);
+  }, [initialProducts, sortBy, priceRange, selectedSizes]);
 
   const toggleSize = useCallback((size: string) => {
     setSelectedSizes((prev) =>
@@ -73,7 +59,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
   }, []);
 
   const clearFilters = useCallback(() => {
-    setSelectedCategory('all');
     setPriceRange([0, 500]);
     setSelectedSizes([]);
     setSortBy('featured');
@@ -99,30 +84,31 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
     setShowFilters(false);
   }, []);
 
+  const hasActiveFilters = priceRange[1] !== 500 || selectedSizes.length > 0;
+
   return (
     <div className="bg-ivory min-h-screen">
       <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto py-16 md:py-20">
-          <h1 className="font-serif text-4xl md:text-6xl font-semibold text-navy mb-6">
-            {categories.find((c) => c.value === selectedCategory)?.label || 'Shop'}
+        <div className="container mx-auto px-6 md:px-8 lg:px-12 py-10 md:py-12">
+          <h1 className="font-serif text-4xl md:text-5xl font-semibold text-navy mb-4">
+            Luxury Pajamas
           </h1>
-          <p className="text-gray-600 text-base md:text-lg">
-            {filteredAndSortedProducts.length} product
-            {filteredAndSortedProducts.length !== 1 ? 's' : ''} available
+          <p className="text-gray-600 text-base md:text-lg max-w-2xl">
+            Discover our curated collection of premium pajamas, crafted from the finest materials for your ultimate comfort.
+          </p>
+          <p className="text-gray-500 text-sm mt-3">
+            {filteredAndSortedProducts.length} product{filteredAndSortedProducts.length !== 1 ? 's' : ''} available
           </p>
         </div>
       </div>
       
-      {/* THIS IS THE FIXED LINE */}
-      <div className="container mx-auto px-6 md:px-8 lg:px-12 py-6 md:py-8">
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 py-8 md:py-10">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           <aside className="hidden lg:block lg:w-72 flex-shrink-0">
             <div className="sticky top-28 space-y-8 bg-white p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-between border-b border-gray-200 pb-4">
                 <h2 className="font-serif text-xl font-semibold text-navy">Filters</h2>
-                {(selectedCategory !== 'all' ||
-                  priceRange[1] !== 500 ||
-                  selectedSizes.length > 0) && (
+                {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
                     className="text-sm text-accent-gold hover:text-gold transition-colors"
@@ -133,25 +119,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </div>
 
               <div>
-                <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Categories</h3>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.value}
-                      onClick={() => setSelectedCategory(category.value)}
-                      className={`block w-full text-left px-4 py-3 rounded-md transition-all text-sm ${
-                        selectedCategory === category.value
-                          ? 'bg-navy text-white shadow-sm'
-                          : 'text-gray-700 hover:bg-warm-white hover:text-navy'
-                      }`}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Price Range</h3>
                 <div className="space-y-4">
                   <input
@@ -218,7 +185,7 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </select>
             </div>
 
-            <div className="hidden lg:flex items-center justify-between mb-10 bg-white p-4 rounded-lg shadow-sm">
+            <div className="hidden lg:flex items-center justify-between mb-8 bg-white p-4 rounded-lg shadow-sm">
               <p className="text-sm text-gray-600 font-medium">
                 Showing <span className="text-navy">{filteredAndSortedProducts.length}</span> of {initialProducts.length} products
               </p>
@@ -264,8 +231,8 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </div>
             </div>
             {filteredAndSortedProducts.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-lg shadow-sm mt-5 sm:mt-6 lg:mt-8">
-                <div className="max-w-md mx-auto space-y-6">
+              <div className="text-center py-16 bg-white rounded-lg shadow-sm mt-4">
+                <div className="max-w-md mx-auto space-y-5">
                   <div className="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
                     <FiFilter size={32} className="text-gray-400" />
                   </div>
@@ -314,27 +281,6 @@ export function ShopClient({ initialProducts, initialCategory }: ShopClientProps
               </div>
 
               <div>
-                <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Categories</h3>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.value}
-                      onClick={() => {
-                        setSelectedCategory(category.value);
-                      }}
-                      className={`block w-full text-left px-4 py-3 rounded-md transition-all text-sm ${
-                        selectedCategory === category.value
-                          ? 'bg-navy text-white shadow-sm'
-                          : 'text-gray-700 hover:bg-warm-white'
-                      }`}
-                    >
-                      {category.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-navy mb-4 text-sm uppercase tracking-wider">Price Range</h3>
                 <div className="space-y-4">
                   <input

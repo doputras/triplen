@@ -29,12 +29,12 @@ export default async function Home() {
             </h1>
             <div className="h-px w-24 sm:w-32 md:w-40 bg-accent-gold mx-auto"></div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-[0.2em] sm:tracking-[0.3em] uppercase font-light">
-              The Art of Sleep
+              Collections
             </p>
           </div>
           
           <p className="text-base md:text-lg lg:text-xl max-w-2xl lg:max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 lg:mb-10 font-light">
-            Crafted from the world's finest materials, each piece embodies timeless elegance and unparalleled comfort.
+            Crafted from the world's finest materials, our pajamas embody timeless elegance and unparalleled comfort for your perfect night's rest.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center">
@@ -42,7 +42,7 @@ export default async function Home() {
               <Button 
                 size="lg" 
                 className="bg-accent-gold border-2 border-accent-gold text-navy hover:bg-transparent hover:text-white transition-all duration-300 px-14 sm:px-16 py-6 sm:py-8 min-w-[200px] sm:min-w-[220px]">
-                Discover Collection
+                Shop Pajamas
               </Button>
             </Link>
           </div>
@@ -93,21 +93,21 @@ export default async function Home() {
       </section>
 
       {/* Products Carousel Section */}
-      <section className="py-32 sm:py-40 lg:py-52 bg-ivory">
+      <section className="py-16 sm:py-20 lg:py-24 bg-ivory">
         <div className="mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-12">
-          <div className="text-center mb-16 sm:mb-20 space-y-2 sm:space-y-4 lg:space-y-6">
+          <div className="text-center mb-12 sm:mb-14 space-y-2 sm:space-y-3 lg:space-y-4">
             <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-navy tracking-tight">
-              Essential Companions
+              Our Bestsellers
             </h2>
             <div className="h-px w-24 sm:w-32 bg-accent-gold mx-auto"></div>
             <p className="text-gray-600 text-base sm:text-lg md:text-xl mx-auto leading-relaxed px-4 max-w-full">
-              Discover our curated selection of luxury sleepwear, each piece designed to elevate your evening ritual into an art form.
+              Discover our curated selection of luxury pajamas, each piece designed to elevate your evening ritual into an art form.
             </p>
           </div>
           
           {/* Horizontal Scrolling Products */}
           <div className="relative">
-            <div className="overflow-x-auto scrollbar-hide pb-8 sm:pb-10">
+            <div className="overflow-x-auto scrollbar-hide pb-4">
               <div className="flex gap-4 sm:gap-6 md:gap-8 justify-center md:justify-start">
                 {featuredProducts.map((product) => (
                   <div key={product.id} className="w-[280px] sm:w-[340px] md:w-[400px] lg:w-[440px] flex-shrink-0">
@@ -118,12 +118,12 @@ export default async function Home() {
             </div>
 
             {/* View All Link */}
-            <div className="text-center mt-20 sm:mt-28 lg:mt-32">
+            <div className="text-center mt-10 sm:mt-12">
               <Link 
                 href="/collection" 
                 className="inline-flex items-center gap-2 sm:gap-3 text-navy hover:text-accent-gold transition-colors text-base sm:text-lg md:text-xl font-medium group"
               >
-                <span>View All Products</span>
+                <span>View All Pajamas</span>
                 <FiChevronRight className="text-xl sm:text-2xl group-hover:translate-x-1.5 transition-transform" />
               </Link>
             </div>
@@ -132,14 +132,14 @@ export default async function Home() {
       </section>
 
       {/* About Section */}
-      <section className="py-32 sm:py-40 lg:py-52 bg-white">
+      <section className="py-16 sm:py-20 lg:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 xl:gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 lg:gap-16 xl:gap-20 items-center">
             <div className="order-2 lg:order-1">
               <div className="aspect-[4/5] relative overflow-hidden bg-beige/20 rounded-lg shadow-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=800&auto=format&fit=crop"
-                  alt="Luxury sleepwear craftsmanship"
+                  alt="Luxury pajamas craftsmanship"
                   fill
                   className="object-cover"
                   unoptimized
@@ -148,14 +148,14 @@ export default async function Home() {
             </div>
             <div className="order-1 lg:order-2 text-center lg:text-left">
               <p className="text-accent-gold text-sm sm:text-base uppercase tracking-widest mb-2">Our Story</p>
-              <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl text-navy mb-4 sm:mb-5 leading-tight">
+              <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl text-navy mb-4 leading-tight">
                 Where Luxury Meets Comfort
               </h2>
-              <div className="h-px w-20 sm:w-24 bg-accent-gold mb-8 sm:mb-10 mx-auto lg:mx-0"></div>
+              <div className="h-px w-20 sm:w-24 bg-accent-gold mb-6 mx-auto lg:mx-0"></div>
               
-              <div className="space-y-6 sm:space-y-8 text-gray-700 leading-relaxed text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
+              <div className="space-y-4 sm:space-y-5 text-gray-700 leading-relaxed text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
                 <p>
-                  At 3N, we believe that the art of rest begins with what you wear. Our collections 
+                  At 3N, we believe that the art of rest begins with what you wear. Our pajamas 
                   are thoughtfully designed to transform your evening routine into a luxurious ritual.
                 </p>
                 <p>
@@ -169,7 +169,7 @@ export default async function Home() {
                 </p>
               </div>
               
-              <Link href="/contact" className="inline-block mt-10 sm:mt-12">
+              <Link href="/contact" className="inline-block mt-8">
                 <Button variant="outline" size="lg">
                   Learn More About Us
                 </Button>

@@ -141,11 +141,11 @@ export default function CheckoutPage() {
     <div className="bg-ivory min-h-screen">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
-          <h1 className="font-serif text-4xl font-semibold text-navy">Checkout</h1>
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
+          <h1 className="font-serif text-3xl font-semibold text-navy">Checkout</h1>
           
           {/* Progress Steps */}
-          <div className="flex items-center justify-center mt-8 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center mt-6 max-w-2xl mx-auto">
             {steps.map((step, index) => (
               <React.Fragment key={step.id}>
                 <div className="flex items-center">
@@ -177,18 +177,18 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Forms */}
           <div className="lg:col-span-2">
             {/* Shipping Information */}
             {currentStep === 'shipping' && (
-              <div className="bg-white p-8">
-                <h2 className="font-serif text-2xl font-semibold text-navy mb-6">
+              <div className="bg-white p-6">
+                <h2 className="font-serif text-xl font-semibold text-navy mb-5">
                   Shipping Information
                 </h2>
-                <form onSubmit={shippingForm.handleSubmit(handleShippingSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={shippingForm.handleSubmit(handleShippingSubmit)} className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         First Name *
@@ -273,7 +273,7 @@ export default function CheckoutPage() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         City *
@@ -339,12 +339,12 @@ export default function CheckoutPage() {
 
             {/* Payment Information */}
             {currentStep === 'payment' && (
-              <div className="bg-white p-8">
-                <h2 className="font-serif text-2xl font-semibold text-navy mb-6 flex items-center gap-2">
+              <div className="bg-white p-6">
+                <h2 className="font-serif text-xl font-semibold text-navy mb-5 flex items-center gap-2">
                   <FiLock className="text-accent-gold" />
                   Payment Information
                 </h2>
-                <form onSubmit={paymentForm.handleSubmit(handlePaymentSubmit)} className="space-y-6">
+                <form onSubmit={paymentForm.handleSubmit(handlePaymentSubmit)} className="space-y-5">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Card Number *
@@ -374,7 +374,7 @@ export default function CheckoutPage() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Expiry Date *
@@ -425,14 +425,14 @@ export default function CheckoutPage() {
 
             {/* Review Order */}
             {currentStep === 'review' && (
-              <div className="bg-white p-8 space-y-8">
+              <div className="bg-white p-6 space-y-6">
                 <div>
-                  <h2 className="font-serif text-2xl font-semibold text-navy mb-6">
+                  <h2 className="font-serif text-xl font-semibold text-navy mb-5">
                     Review Your Order
                   </h2>
 
                   {/* Shipping Address */}
-                  <div className="mb-6 pb-6 border-b border-gray-200">
+                  <div className="mb-5 pb-5 border-b border-gray-200">
                     <h3 className="font-medium text-navy mb-3">Shipping Address</h3>
                     {shippingData && (
                       <>
@@ -453,8 +453,8 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* Payment Method */}
-                  <div className="mb-6">
-                    <h3 className="font-medium text-navy mb-3">Payment Method</h3>
+                  <div className="mb-5">
+                    <h3 className="font-medium text-navy mb-2">Payment Method</h3>
                     {paymentData && (
                       <p className="text-gray-700">
                         Card ending in {paymentData.cardNumber.slice(-4)}
@@ -482,12 +482,12 @@ export default function CheckoutPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white p-8 sticky top-24">
-              <h2 className="font-serif text-2xl font-semibold text-navy mb-6">
+            <div className="bg-white p-6 sticky top-24">
+              <h2 className="font-serif text-xl font-semibold text-navy mb-5">
                 Order Summary
               </h2>
 
-              <div className="space-y-4 mb-6">
+              <div className="space-y-3 mb-5">
                 {cart.map((item) => (
                   <div
                     key={`${item.product.id}-${item.selectedColor.name}-${item.selectedSize}`}
@@ -521,7 +521,7 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
-              <div className="border-t border-gray-200 pt-4 space-y-3">
+              <div className="border-t border-gray-200 pt-4 space-y-2">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
@@ -535,7 +535,7 @@ export default function CheckoutPage() {
                   <span>${tax.toFixed(2)}</span>
                 </div>
                 <div className="border-t border-gray-200 pt-3">
-                  <div className="flex justify-between text-xl font-semibold text-navy">
+                  <div className="flex justify-between text-lg font-semibold text-navy">
                     <span>Total</span>
                     <span>${total.toFixed(2)}</span>
                   </div>

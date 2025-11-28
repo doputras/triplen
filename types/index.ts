@@ -4,7 +4,6 @@ export interface Product {
   slug: string;
   description: string;
   price: number;
-  category: 'robes' | 'pajamas' | 'nightgowns' | 'sets' | 'accessories';
   material?: string;
   featured: boolean;
   image_url?: string;
@@ -86,7 +85,6 @@ export interface OrderDetails {
 }
 
 export interface FilterOptions {
-  category: string[];
   priceRange: [number, number];
   colors: string[];
   sizes: string[];

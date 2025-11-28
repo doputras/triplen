@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { FiHeart, FiEye } from 'react-icons/fi';
+import { FiEye } from 'react-icons/fi';
 import type { Product } from '@/types';
 
 interface ProductCardProps {
@@ -13,7 +13,6 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
-  const [isWishlisted, setIsWishlisted] = React.useState(false);
   const displayPrice = product.price;
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
 
@@ -35,14 +34,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       }
     }
     
-    // Use category-specific placeholder from Unsplash
-    const placeholders: Record<string, string> = {
-      robes: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
-      pajamas: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=800&auto=format&fit=crop',
-      nightgowns: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop',
-      accessories: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop',
-    };
-    return placeholders[product.category] || 'https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=800&auto=format&fit=crop';
+    // Use default pajamas placeholder (3:4 aspect ratio optimized)
+    return 'https://images.unsplash.com/photo-1616627547584-bf28cee262db?q=80&w=800&h=1067&auto=format&fit=crop';
   };
 
   const hasHoverImage = product.hover_image_url || (product.images && product.images.length > 1);
@@ -60,7 +53,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           href={`/product/${product.slug}`}
           className="block"
         >
-          <div className="relative overflow-hidden bg-warm-white aspect-[3/4] mb-5">
+          <div className="relative overflow-hidden bg-warm-white aspect-[3/4] mb-3">
             {/* Product Image */}
             <motion.div
               className="relative w-full h-full"
@@ -115,25 +108,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               )}
             </div>
 
-            {/* Quick Actions - Wishlist & Quick View */}
+            {/* Quick Actions - Quick View */}
             <div className="absolute top-4 right-4 flex flex-col gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsWishlisted(!isWishlisted);
-                }}
-                className={`p-3 rounded-full shadow-lg backdrop-blur-sm transition-colors ${
-                  isWishlisted 
-                    ? 'bg-rose-gold text-white' 
-                    : 'bg-white/90 text-navy hover:bg-rose-gold hover:text-white'
-                }`}
-                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-              >
-                <FiHeart size={18} fill={isWishlisted ? 'currentColor' : 'none'} />
-              </motion.button>
-              
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -154,7 +130,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Link>
 
         {/* Product Info */}
-        <div className="space-y-3 px-2">
+        <div className="space-y-2 px-1">
           <Link href={`/product/${product.slug}`}>
             <h3 className="font-serif text-lg md:text-xl text-navy group-hover:text-accent-gold transition-colors duration-300 line-clamp-1">
               {product.name}
@@ -165,7 +141,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.description}
           </p>
 
-          <div className="flex items-center gap-3 pt-2">
+          <div className="flex items-center gap-3 pt-1">
             <span className="text-xl md:text-2xl font-semibold text-navy">
               ${displayPrice.toFixed(2)}
             </span>
@@ -183,8 +159,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Color Options Preview */}
           {product.colors.length > 0 && (
-            <div className="flex items-center gap-2 pt-2">
-              <div className="flex gap-2">
+            <div className="flex items-center gap-2 pt-1">
+              <div className="flex gap-1.5">
                 {product.colors.slice(0, 5).map((color, index) => (
                   <motion.div
                     key={color.name}
@@ -192,7 +168,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.1 * index }}
                     whileHover={{ scale: 1.3 }}
-                    className="w-7 h-7 rounded-full border-2 border-gray-200 hover:border-accent-gold transition-colors cursor-pointer shadow-sm"
+                    className="w-6 h-6 rounded-full border-2 border-gray-200 hover:border-accent-gold transition-colors cursor-pointer shadow-sm"
                     style={{ backgroundColor: color.hex }}
                     title={color.name}
                   />

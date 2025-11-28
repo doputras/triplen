@@ -1,5 +1,4 @@
 -- Create custom types
-CREATE TYPE product_category AS ENUM ('robes', 'pajamas', 'nightgowns', 'accessories');
 CREATE TYPE order_status AS ENUM ('pending', 'processing', 'shipped', 'delivered', 'cancelled');
 
 -- Enable Row Level Security
@@ -22,7 +21,6 @@ CREATE TABLE IF NOT EXISTS public.products (
   slug TEXT UNIQUE NOT NULL,
   description TEXT,
   price DECIMAL(10, 2) NOT NULL,
-  category product_category NOT NULL,
   material TEXT,
   featured BOOLEAN DEFAULT FALSE,
   image_url TEXT,
@@ -103,7 +101,6 @@ CREATE TABLE IF NOT EXISTS public.order_items (
 );
 
 -- Create indexes for better performance
-CREATE INDEX idx_products_category ON public.products(category);
 CREATE INDEX idx_products_featured ON public.products(featured);
 CREATE INDEX idx_products_slug ON public.products(slug);
 CREATE INDEX idx_carts_user_id ON public.carts(user_id);

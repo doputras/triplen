@@ -64,8 +64,8 @@ export const CartSidebar: React.FC = () => {
             aria-labelledby="cart-title"
           >
         {/* Header */}
-        <div className="flex items-center justify-between p-8 border-b border-gray-200">
-          <h2 id="cart-title" className="font-serif text-2xl md:text-3xl font-semibold text-navy">Shopping Cart</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 id="cart-title" className="font-serif text-xl md:text-2xl font-semibold text-navy">Shopping Cart</h2>
           <button
             onClick={closeCart}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -76,7 +76,7 @@ export const CartSidebar: React.FC = () => {
         </div>
 
         {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-8">
+        <div className="flex-1 overflow-y-auto p-5 md:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy"></div>
@@ -175,9 +175,9 @@ export const CartSidebar: React.FC = () => {
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="border-t border-gray-200 p-6 md:p-8 space-y-6">
+          <div className="border-t border-gray-200 p-5 md:p-6 space-y-4">
             {/* Totals */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex justify-between text-base">
                 <span className="text-gray-600">Subtotal ({itemCount} items)</span>
                 <span className="font-medium">${subtotal.toFixed(2)}</span>
@@ -189,11 +189,11 @@ export const CartSidebar: React.FC = () => {
                 </span>
               </div>
               {freeShippingRemaining > 0 && (
-                <p className="text-sm text-accent-gold bg-warm-white px-4 py-2 rounded">
+                <p className="text-sm text-accent-gold bg-warm-white px-3 py-2 rounded">
                   Add ${freeShippingRemaining.toFixed(2)} more for free shipping!
                 </p>
               )}
-              <div className="flex justify-between text-xl font-semibold pt-4 border-t border-gray-200">
+              <div className="flex justify-between text-lg font-semibold pt-3 border-t border-gray-200">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
@@ -209,7 +209,7 @@ export const CartSidebar: React.FC = () => {
             <Link
               href="/cart"
               onClick={closeCart}
-              className="block text-center text-base text-navy hover:text-accent-gold transition-colors"
+              className="block text-center text-sm text-navy hover:text-accent-gold transition-colors"
             >
               View Full Cart
             </Link>

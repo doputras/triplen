@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getProductBySlug, getProductsByCategory } from '@/lib/products';
+import { getProductBySlug, getAllProducts } from '@/lib/products';
 import { ProductDetailClient } from './ProductDetailClient';
 
 interface ProductPageProps {
@@ -16,9 +16,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  // Get related products
-  const allCategoryProducts = await getProductsByCategory(product.category);
-  const relatedProducts = allCategoryProducts
+  // Get related products (exclude current product)
+  const allProducts = await getAllProducts();
+  const relatedProducts = allProducts
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
 

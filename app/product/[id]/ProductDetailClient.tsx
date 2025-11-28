@@ -27,14 +27,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
   // Get product image
   const getProductImage = () => {
     if (product.image_url) return product.image_url;
-    
-    const placeholders: Record<string, string> = {
-      robes: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop',
-      pajamas: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=1200&auto=format&fit=crop',
-      nightgowns: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1200&auto=format&fit=crop',
-      accessories: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop',
-    };
-    return placeholders[product.category] || 'https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=1200&auto=format&fit=crop';
+    return 'https://images.unsplash.com/photo-1616627547584-bf28cee262db?q=80&w=800&h=1067&auto=format&fit=crop';
   };
 
   const currentImages = [
@@ -58,26 +51,22 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
 
   return (
     <div className="bg-ivory min-h-screen">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 lg:py-10">
         {/* Breadcrumb */}
-        <nav className="text-sm text-gray-600 mb-8">
+        <nav className="text-sm text-gray-600 mb-6">
           <Link href="/" className="hover:text-navy">
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link href="/shop" className="hover:text-navy">
-            Shop
-          </Link>
-          <span className="mx-2">/</span>
-          <Link href={`/shop?category=${product.category}`} className="hover:text-navy capitalize">
-            {product.category}
+          <Link href="/collection" className="hover:text-navy">
+            Collection
           </Link>
           <span className="mx-2">/</span>
           <span className="text-navy">{product.name}</span>
         </nav>
 
         {/* Product Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 mb-16">
           {/* Images */}
           <div className="space-y-4">
             {/* Main Image */}
@@ -115,9 +104,9 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
           </div>
 
           {/* Product Info */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
-              <h1 className="font-playfair text-4xl md:text-5xl text-navy mb-4">
+              <h1 className="font-playfair text-3xl md:text-4xl text-navy mb-3">
                 {product.name}
               </h1>
               <p className="text-2xl text-gray-900">${product.price.toFixed(2)}</p>
@@ -211,13 +200,10 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
               >
                 {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
               </Button>
-              <Button variant="outline" size="lg" fullWidth>
-                Add to Wishlist
-              </Button>
             </div>
 
             {/* Features */}
-            <div className="border-t border-gray-200 pt-8 space-y-4">
+            <div className="border-t border-gray-200 pt-6 space-y-3">
               <div className="flex items-start gap-3">
                 <FiTruck className="text-navy mt-1" size={20} />
                 <div>
@@ -243,7 +229,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
 
             {/* Material */}
             {product.material && (
-              <div className="border-t border-gray-200 pt-8">
+              <div className="border-t border-gray-200 pt-6">
                 <h3 className="text-sm font-medium text-gray-900 mb-2">Materials</h3>
                 <p className="text-gray-700">{product.material}</p>
               </div>
@@ -253,11 +239,11 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div>
-            <h2 className="font-playfair text-3xl md:text-4xl text-navy mb-12 text-center">
+          <div className="pt-8 border-t border-gray-200">
+            <h2 className="font-playfair text-2xl md:text-3xl text-navy mb-8 text-center">
               You May Also Like
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}

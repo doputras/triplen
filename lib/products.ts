@@ -48,25 +48,6 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return data
 }
 
-export async function getProductsByCategory(category: string): Promise<Product[]> {
-  const supabase = await createClient()
-  
-  let query = supabase.from('products').select('*')
-  
-  if (category !== 'all') {
-    query = query.eq('category', category)
-  }
-
-  const { data, error } = await query.order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('Error fetching products by category:', error)
-    return []
-  }
-
-  return data || []
-}
-
 export async function getNewProducts(): Promise<Product[]> {
   const supabase = await createClient()
   const { data, error } = await supabase

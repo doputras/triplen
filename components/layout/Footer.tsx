@@ -25,22 +25,22 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-navy text-white pt-1 sm:pt-3 lg:pt-5">
-      <div className="mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-16 md:py-20">
+    <footer className="bg-navy text-white">
+      <div className="mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-14 lg:py-16">
         {/* Brand and Newsletter Section */}
-        <div className="max-w-full mx-auto text-center space-y-8 sm:space-y-10 mb-12 sm:mb-16">
+        <div className="max-w-full mx-auto text-center space-y-4 sm:space-y-5 mb-10 sm:mb-12">
           {/* Brand */}
-          <div className="space-y-3 sm:space-y-5">
+          <div className="space-y-2 sm:space-y-3">
             <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">3N</h2>
-            <p className="text-base md:text-lg text-accent-gold italic">Luxury made effortless</p>
+            <p className="text-base md:text-lg text-accent-gold italic">Luxury pajamas made effortless</p>
             <p className="text-sm md:text-base text-gray-400 leading-relaxed mx-auto px-4">
-              Experience the finest luxury sleepwear, crafted with premium materials
+              Experience the finest luxury pajamas, crafted with premium materials
               for your ultimate comfort and elegance.
             </p>
           </div>
         </div>
-        <div className="flex justify-center py-10 sm:py-12 border-t border-gray-700">
-          <div className="space-y-5 sm:space-y-7 lg:space-y-9 text-center">
+        <div className="flex justify-center py-6 sm:py-8 border-t border-gray-700">
+          <div className="space-y-4 text-center">
             <div className="flex gap-3 sm:gap-4 justify-center">
               <a
                 href="https://instagram.com"
@@ -75,10 +75,10 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-700 pt-6 sm:pt-8 mt-6 sm:mt-8">
+        <div className="border-t border-gray-700 pt-6 mt-2">
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-sm px-4 sm:px-0">
             <p className="text-gray-400 text-center md:text-left">
-              © {currentYear} 3N Luxury Sleepwear. All rights reserved.
+              © {currentYear} 3N Luxury Pajamas. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
               <Link

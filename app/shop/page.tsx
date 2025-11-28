@@ -1,14 +1,8 @@
 import { getAllProducts } from '@/lib/products';
 import { ShopClient } from '@/components/shop/ShopClient';
 
-export default async function ShopPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ category?: string }>
-}) {
-  const params = await searchParams;
+export default async function ShopPage() {
   const products = await getAllProducts();
-  const initialCategory = params.category || 'all';
 
-  return <ShopClient initialProducts={products} initialCategory={initialCategory} />;
+  return <ShopClient initialProducts={products} />;
 }

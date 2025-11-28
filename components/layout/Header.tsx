@@ -1,21 +1,29 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FiShoppingBag, FiMenu, FiX, FiSearch, FiHeart, FiUser } from 'react-icons/fi';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { FiShoppingBag, FiMenu, FiX, FiSearch, FiUser } from 'react-icons/fi';
 import { useStore } from '@/store/useStore';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
+import type { Product } from '@/types';
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { isMobileMenuOpen, setMobileMenuOpen, setCartOpen } = useStore();
   const { user } = useAuth();
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +32,41 @@ export const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Search products with debounce
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/products/search?q=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data.products || []);
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   const navLinks = useMemo(() => [
     { href: '/', label: 'Home' },
@@ -59,7 +102,14 @@ export const Header: React.FC = () => {
 
   const closeSearch = useCallback(() => {
     setSearchOpen(false);
+    setSearchQuery('');
+    setSearchResults([]);
   }, []);
+
+  const handleProductClick = useCallback((slug: string) => {
+    closeSearch();
+    router.push(`/product/${slug}`);
+  }, [closeSearch, router]);
 
   return (
     <>
@@ -118,13 +168,6 @@ export const Header: React.FC = () => {
               aria-label="Search products"
             >
               <FiSearch size={25} aria-hidden="true" />
-            </button>
-            
-            <button
-              className="hidden md:block p-2 text-navy hover:text-accent-gold transition-colors focus-visible-ring rounded-md"
-              aria-label="View wishlist"
-            >
-              <FiHeart size={25} aria-hidden="true" />
             </button>
 
             <Link
@@ -188,7 +231,7 @@ export const Header: React.FC = () => {
           aria-labelledby="search-title"
         >
           <div
-            className="bg-white w-full max-w-4xl mx-auto mt-20 p-8 md:p-12 shadow-2xl"
+            className="bg-white w-full max-w-4xl mx-auto mt-20 p-8 md:p-12 shadow-2xl rounded-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-8">
@@ -204,14 +247,63 @@ export const Header: React.FC = () => {
             <div className="relative">
               <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} aria-hidden="true" />
               <input
+                ref={searchInputRef}
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for products..."
-                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 focus:border-accent-gold focus:outline-none transition-colors text-navy"
+                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 focus:border-accent-gold focus:outline-none transition-colors text-navy rounded-md"
                 autoFocus
                 aria-label="Search for products"
               />
             </div>
-            <p className="text-sm text-gray-500 mt-4">Try searching for "robes", "silk", or "nightgown"</p>
+
+            {/* Search Results Dropdown */}
+            {searchQuery.trim() && (
+              <div className="mt-4 max-h-96 overflow-y-auto border border-gray-200 rounded-md bg-white">
+                {isSearching ? (
+                  <div className="p-6 text-center text-gray-500">
+                    <div className="animate-spin inline-block w-6 h-6 border-2 border-navy border-t-transparent rounded-full mb-2"></div>
+                    <p>Searching...</p>
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  <ul className="divide-y divide-gray-100">
+                    {searchResults.map((product) => (
+                      <li key={product.id}>
+                        <button
+                          onClick={() => handleProductClick(product.slug)}
+                          className="w-full flex items-center gap-4 p-4 hover:bg-warm-white transition-colors text-left"
+                        >
+                          <div className="relative w-16 h-20 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                            <Image
+                              src={product.image_url || 'https://images.unsplash.com/photo-1616627547584-bf28cee262db?q=80&w=800&h=1067&auto=format&fit=crop'}
+                              alt={product.name}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-navy truncate">{product.name}</h3>
+                            <p className="text-sm text-gray-600 line-clamp-1">{product.description}</p>
+                            <p className="text-sm font-semibold text-navy mt-1">${product.price.toFixed(2)}</p>
+                          </div>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="p-6 text-center text-gray-500">
+                    <p>No products found for "{searchQuery}"</p>
+                    <p className="text-sm mt-2">Try searching for "silk", "cotton", or "cashmere"</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!searchQuery.trim() && (
+              <p className="text-sm text-gray-500 mt-4">Try searching for "silk pajamas", "cotton", or "cashmere"</p>
+            )}
           </div>
         </div>
       )}
